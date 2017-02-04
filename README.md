@@ -1,3 +1,3 @@
-# pomodoro
+# Pomodoro
 
-## A Zipline for freeCodeCamp
+A Pomodoro timer to encourage frequent breaks
