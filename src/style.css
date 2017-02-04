@@ -1,3 +1,25 @@
+body {
+    margin: 0;
+    background: yellow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    background: magenta;
+}
+
+.pomodoro {
+    background: red;
+    border-radius: 50%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+}
+
 h1 {
+    flex: 1;
     text-align: center;
 }
