@@ -1,15 +1,60 @@
 require('file-loader?name=[name].[ext]!./index.html');
 require('./style.css');
 
-const content = document.querySelector('.content');
+var state = 'stopped';
 
-function resize() {
-    const dia = Math.min(window.innerWidth, window.innerHeight);
-    const margin = (window.innerHeight - dia) / 2;
-    
-    const padding = 32;
-    content.setAttribute('style', `width: ${dia-padding*2}px; height: ${dia-padding*2}px; margin-top: ${margin}px; padding: 32px`);
+var activityTimer = 30;
+var breakTimer = 5;
+
+var counter = 0;
+var interval = null;
+
+var h2 = document.querySelector('.countdown');
+var btn = document.querySelector('.activate');
+
+btn.addEventListener('click', setup);
+
+
+function display(time) {
+  var min = Math.floor(time / 60).toString();
+  var sec = (time % 60).toString();
+
+  var m = min.length == 1 ? '0' + min : min;
+  var s = sec.length == 1 ? '0' + sec : sec;
+
+  return m + ':' + s;
 }
-resize();
 
-window.onresize = resize;
+function setup() {
+  console.log('SETUP');
+  state = 'activity';
+  btn.innerHTML = 'Pause';
+
+  counter = activityTimer;
+  interval = setInterval(tick, 1000);
+
+  btn.removeEventListener('click', setup);
+  btn.addEventListener('click', pause);
+}
+
+function pause() {
+  if(state == 'paused') {
+    console.log('RESUMING');
+    state = 'activity';
+    btn.innerHTML = 'Resume';
+    interval = setInterval(tick, 1000);
+  } else {
+    console.log('PAUSING');
+    state = 'paused';
+    btn.innerHTML = 'Resume';
+    clearInterval(interval);
+  }
+}
+
+function tick() {
+  console.log('TICK');
+}
+
+function end() {
+  console.log('END');
+}
