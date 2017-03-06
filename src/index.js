@@ -2,17 +2,16 @@ require('file-loader?name=[name].[ext]!./index.html');
 require('./style.css');
 
 var state = 'stopped';
-
-var activityTimer = 30;
+var activityTimer = 15;
 var breakTimer = 5;
-
-var counter = 0;
+var counter = activityTimer;
 var interval = null;
 
-var h2 = document.querySelector('.countdown');
+var clock = document.querySelector('.clock');
 var btn = document.querySelector('.activate');
 
-btn.addEventListener('click', setup);
+btn.addEventListener('click', start);
+display(counter);
 
 
 function display(time) {
@@ -22,29 +21,28 @@ function display(time) {
   var m = min.length == 1 ? '0' + min : min;
   var s = sec.length == 1 ? '0' + sec : sec;
 
-  return m + ':' + s;
+  clock.innerHTML = m + ':' + s;
 }
 
-function setup() {
-  console.log('SETUP');
+function start() {
   state = 'activity';
   btn.innerHTML = 'Pause';
 
   counter = activityTimer;
+  display(counter);
+
   interval = setInterval(tick, 1000);
 
-  btn.removeEventListener('click', setup);
+  btn.removeEventListener('click', start);
   btn.addEventListener('click', pause);
 }
 
 function pause() {
   if(state == 'paused') {
-    console.log('RESUMING');
     state = 'activity';
-    btn.innerHTML = 'Resume';
+    btn.innerHTML = 'Pause';
     interval = setInterval(tick, 1000);
   } else {
-    console.log('PAUSING');
     state = 'paused';
     btn.innerHTML = 'Resume';
     clearInterval(interval);
@@ -52,9 +50,16 @@ function pause() {
 }
 
 function tick() {
-  console.log('TICK');
-}
+  counter--;
+  if(counter < 0) {
+    if(state == 'activity') {
+      counter = breakTimer;
+      state = 'break';
+    } else if(state == 'break') {
+      counter = activityTimer;
+      state = 'activity';
+    }
+  }
 
-function end() {
-  console.log('END');
+  display(counter);
 }
